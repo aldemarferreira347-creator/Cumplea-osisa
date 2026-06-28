@@ -1,0 +1,1321 @@
+/* ════════════════════════════════════════════════════════════════
+   Para Isabela — Sistema visual "Petróleo y Trigo"
+   ----------------------------------------------------------------
+   La identidad nace de los dos colores propios del Principito: el
+   azul-petróleo de su abrigo y el trigo dorado que el zorro dice
+   que lo hará pensar en él. Noche verdosa (no el azul marino por
+   defecto) + oro de miel terroso (no naranja saturado), sobre papel
+   envejecido. El trigo no es un acento: es el mensaje.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Color ─────────────────────────────────────────────────── */
+  --color-noche:         #0B1A20;   /* Noche petróleo: azul-verdoso casi negro (antes índigo) */
+  --color-noche-prof:    #071217;   /* Pozo de noche, para profundidad/viñeta */
+  --color-crepusculo:    #28505A;   /* Crepúsculo petróleo — el abrigo del principito */
+  --color-campo:         #21413A;   /* Campo al anochecer, verde-pino teal (une con la noche) */
+  --color-campo-prof:    #16302F;   /* Base del campo */
+  --color-arena:         #CE9A56;   /* Arena del desierto, ocre de miel */
+  --color-trigo:         #E7B24C;   /* Trigo maduro: oro de miel terroso (antes naranja) */
+  --color-trigo-vivo:    #F4C75A;   /* Trigo encendido al clímax (la ola) */
+  --color-trigo-palido:  #B2A878;   /* Trigo dormido, paja seca y fría */
+  --color-terracota:     #D0654A;   /* Rosa/terracota apagado, acuarela vieja */
+  --color-crema:         #FBF3E0;   /* Papel envejecido (antes blanco puro) */
+  --color-crema-tenue:   #E8DEC8;   /* Crema atenuada para texto secundario */
+  --color-oro:           #F4D06A;   /* Oro mágico de estrellas y destellos */
+
+  /* ── Tipografía ────────────────────────────────────────────── */
+  --font-display: 'Fraunces', Georgia, serif;   /* voz del libro: títulos + narración */
+  --font-body:    'Karla', system-ui, sans-serif; /* marco moderno: etiquetas/UI */
+
+  /* ── Escala de espaciado (progresión deliberada ~×1.5) ─────── */
+  --space-1: 0.5rem;
+  --space-2: 0.875rem;
+  --space-3: 1.25rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4.5rem;
+  --space-7: 7rem;
+  --space-8: 10rem;
+
+  /* ── Radios y sombras coherentes ───────────────────────────── */
+  --radius-btn: 5px;        /* botones: un solo radio en todo el sitio */
+  --radius-card: 14px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 18px 50px -18px rgba(0, 0, 0, 0.7);
+  --shadow-card:
+    0 24px 60px -24px rgba(0, 0, 0, 0.75),
+    0 6px 18px -10px rgba(0, 0, 0, 0.5);
+
+  /* ── Marca de foco accesible (consistente en todo el sitio) ── */
+  --focus-ring: 0 0 0 2px var(--color-noche), 0 0 0 4px var(--color-trigo);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-crema);
+  background: var(--color-noche);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;            /* Fraunces es variable (opsz) */
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  overflow-x: hidden;
+}
+
+/* Tipografía de exhibición: liga + dlig encienden las ligaduras
+   elegantes de Fraunces (ct, st, fi…) que estaban apagadas. */
+.welcome-title,
+.s1-title,
+.quote-main,
+.quote-sub,
+.birthday-text,
+.dedicatoria,
+.confirm-text,
+.scene-frag {
+  font-feature-settings: "liga" 1, "dlig" 1, "calt" 1;
+}
+
+/* Grano de papel finísimo — un susurro, no un filtro pesado.
+   (Antes: opacity 0.15 + 4 octavas + mix-blend overlay = ruido genérico
+    de IA y, además, mataba el rendimiento de pintado.) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  background-repeat: repeat;
+  mix-blend-mode: soft-light;
+}
+
+/* ── Animaciones flotantes etéreas ─────────────────────────────── */
+@keyframes ethereal-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes ethereal-pulse {
+  0%, 100% { filter: drop-shadow(0 4px 16px rgba(244, 208, 106, 0.2)); }
+  50%      { filter: drop-shadow(0 8px 32px rgba(244, 208, 106, 0.45)); }
+}
+
+#act-welcome,
+#act-solar-system,
+#act-story {
+  display: none;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+#act-welcome.active,
+#act-solar-system.active,
+#act-story.active {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Utilidades ────────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* El botón accesible oculto del Acto 2 se vuelve visible al recibir
+   foco de teclado (requisito del quality floor). */
+.sr-only:focus-visible {
+  position: fixed;
+  top: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip: auto;
+  overflow: visible;
+  white-space: normal;
+  z-index: 300;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--color-noche);
+  background: var(--color-trigo);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ACTO 1 — Bienvenida (portada de un libro)
+   ════════════════════════════════════════════════════════════════ */
+
+.welcome-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--space-4);
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 38%, rgba(244, 208, 106, 0.10) 0%, transparent 72%),
+    var(--color-noche);
+}
+
+/* Campo de estrellas de fondo: detrás del contenido de la portada */
+.welcome-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.welcome-wrap > *:not(.welcome-stars) {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-star {
+  width: clamp(58px, 11vw, 92px);
+  height: clamp(58px, 11vw, 92px);
+  margin-bottom: var(--space-5);
+}
+
+.welcome-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.1rem, 6vw, 3.6rem);
+  color: var(--color-crema);
+  margin: 0 0 var(--space-3);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-shadow:
+    0 0 44px rgba(244, 208, 106, 0.32),
+    0 0 12px rgba(244, 208, 106, 0.18),
+    0 4px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* Kicker / tagline — el "marco moderno" en sans con tracking */
+.welcome-sub {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--color-trigo);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-5);
+  opacity: 0.9;
+}
+
+/* Botón: silencioso en reposo (hairline), se enciende en oro al hover —
+   como una estrella que despierta. Nada de Bootstrap. */
+.welcome-btn {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-crema);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--color-crema) 36%, transparent);
+  border-radius: var(--radius-btn);
+  padding: var(--space-2) var(--space-5);
+  cursor: pointer;
+  position: relative;
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    letter-spacing 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.welcome-btn:hover {
+  color: var(--color-noche);
+  background: var(--color-trigo);
+  border-color: var(--color-trigo);
+  letter-spacing: 0.22em;
+  box-shadow:
+    0 0 0 1px rgba(244, 208, 106, 0.25),
+    0 14px 36px -10px rgba(231, 178, 76, 0.55);
+}
+
+.welcome-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ACTO 2 — Sistema planetario 3D
+   ════════════════════════════════════════════════════════════════ */
+
+#act-solar-system {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  /* Cielo profundo azul-noche con centro iluminado y viñeta en los
+     bordes (como el espacio de la referencia low-poly), visible bajo
+     el canvas 3D transparente. */
+  background:
+    radial-gradient(ellipse 75% 60% at 50% 40%, rgba(120, 170, 200, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 55% at 78% 22%, rgba(70, 110, 130, 0.26) 0%, transparent 64%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 45%, rgba(3, 10, 20, 0.85) 100%),
+    linear-gradient(180deg, #0d2236 0%, #0a1a2c 45%, #061320 100%);
+}
+
+/* Panel de confirmación — tratado como una pequeña "placa de libro",
+   no un tooltip de cristal genérico. */
+.confirm-panel {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(160deg, rgba(40, 80, 90, 0.34) 0%, rgba(11, 26, 32, 0.78) 70%);
+  border: 1px solid rgba(244, 208, 106, 0.30);
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-5);
+  text-align: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 1px rgba(251, 243, 224, 0.12);
+  min-width: 260px;
+  z-index: 10;
+}
+
+.confirm-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(150deg, rgba(251, 243, 224, 0.05) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.confirm-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--color-crema);
+  margin: 0 0 var(--space-3);
+  letter-spacing: 0.005em;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.confirm-yes,
+.confirm-no {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.25s ease, color 0.25s ease,
+              border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.confirm-yes {
+  background: var(--color-trigo);
+  color: var(--color-noche);
+  border-color: var(--color-trigo);
+}
+
+.confirm-yes:hover {
+  background: var(--color-trigo-vivo);
+  border-color: var(--color-trigo-vivo);
+  box-shadow: 0 10px 26px -10px rgba(231, 178, 76, 0.6);
+}
+
+.confirm-no {
+  background: transparent;
+  color: var(--color-crema-tenue);
+  border-color: rgba(251, 243, 224, 0.30);
+}
+
+.confirm-no:hover {
+  color: var(--color-crema);
+  border-color: rgba(251, 243, 224, 0.55);
+}
+
+.confirm-yes:focus-visible,
+.confirm-no:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Pista de interacción — pill refinada, no etiqueta suelta */
+.solar-hint {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(11, 26, 32, 0.62);
+  border: 1px solid rgba(244, 208, 106, 0.18);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0; /* GSAP hace el fade-in */
+}
+
+.solar-hint__icon {
+  font-size: 0.95rem;
+  color: var(--color-trigo);
+  animation: hint-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.solar-hint__text {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-crema-tenue);
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.82); }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ACTO 3 — Scrollytelling
+   ════════════════════════════════════════════════════════════════ */
+
+#act-story {
+  position: relative;
+}
+
+.story-container {
+  position: relative;
+}
+
+/* Botón de silencio — fijo, esquina superior derecha */
+.mute-btn {
+  position: fixed;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 200;
+  background: rgba(11, 26, 32, 0.78);
+  border: 1px solid rgba(244, 208, 106, 0.22);
+  border-radius: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: none; /* visible solo cuando la historia está montada */
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+}
+
+.story-container .mute-btn {
+  display: flex;
+}
+
+.mute-btn:hover {
+  border-color: rgba(244, 208, 106, 0.5);
+  transform: scale(1.08);
+}
+
+.mute-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Escena: contenedores compartidos ──────────────────────────── */
+.scene {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.scene-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+  height: 100%;
+  padding: var(--space-4);
+  position: relative;
+  z-index: 2;
+}
+
+/* Texto narrativo flotando en la noche — SIN caja glass. La legibilidad
+   la da un scrim radial difuminado detrás (no un rectángulo con borde). */
+.scene-text-block {
+  position: relative;
+  z-index: 3;
+  max-width: min(34rem, 90vw);
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--space-5) var(--space-4);
+}
+.scene-text-block::before {
+  content: "";
+  position: absolute;
+  inset: -12% -8%;
+  z-index: -1;
+  background: radial-gradient(ellipse 72% 72% at 50% 50%,
+    rgba(7, 18, 23, 0.74) 0%,
+    rgba(7, 18, 23, 0.42) 46%,
+    transparent 78%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* Narración — la voz del libro, en serif Fraunces */
+.scene-text {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.6vw, 1.42rem);
+  line-height: 1.78;
+  color: var(--color-crema);
+  letter-spacing: 0.004em;
+  text-wrap: balance;
+  text-shadow: 0 1px 18px rgba(7, 18, 23, 0.7);
+  margin: 0;
+}
+
+/* Kicker de capítulo: "I · El piloto" — etiqueta editorial con reglas */
+.kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--color-trigo);
+  margin: 0 0 var(--space-3);
+  opacity: 0.92;
+}
+.kicker::before,
+.kicker::after {
+  content: "";
+  height: 1px;
+  width: clamp(1.2rem, 6vw, 2.8rem);
+  background: linear-gradient(90deg, transparent,
+    color-mix(in srgb, var(--color-trigo) 65%, transparent));
+}
+.kicker::after { transform: scaleX(-1); }
+.kicker__n {
+  color: var(--color-oro);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+/* Capa atmosférica continua de la historia: nebulosa tenue + viñeta +
+   polvo a la deriva. Une todas las escenas (antes cada una iba suelta). */
+.story-atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(40, 80, 90, 0.20), transparent 58%),
+    radial-gradient(90% 70% at 82% 112%, rgba(244, 199, 90, 0.07), transparent 60%);
+}
+.story-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(125% 95% at 50% 48%, transparent 56%, rgba(7, 18, 23, 0.58) 100%);
+}
+/* Polvo/estrellas a la deriva SOBRE las escenas (sus fondos son opacos):
+   capa de continuidad sutil que liga todo el relato. */
+.story-dust {
+  position: fixed;
+  inset: -6% 0;
+  z-index: 55;
+  width: 100%;
+  height: 112%;
+  pointer-events: none;
+  opacity: 0.38;
+  mix-blend-mode: screen;
+  animation: dust-drift 48s linear infinite alternate;
+}
+@keyframes dust-drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-5%); }
+}
+
+.split-unit {
+  display: inline-block;
+}
+
+/* ── Escena 1: Apertura ────────────────────────────────────────── */
+.scene1-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.stars-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scene1-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: var(--space-3) var(--space-4);
+}
+
+.s1-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.6rem, 7vw, 4.5rem);
+  color: var(--color-crema);
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-shadow:
+    0 0 50px rgba(244, 208, 106, 0.42),
+    0 0 16px rgba(244, 208, 106, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.65);
+}
+
+.s1-sub {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-trigo);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(251, 243, 224, 0.4);
+  z-index: 2;
+}
+
+/* ── Escena 2: Piloto / Desierto ───────────────────────────────── */
+[data-scene="2"] {
+  background: var(--color-noche);
+}
+
+.scene2-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    165deg,
+    var(--color-noche) 0%,
+    var(--color-crepusculo) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dunes-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48%;
+  z-index: 1;
+  filter: drop-shadow(0 -6px 26px rgba(11, 26, 32, 0.5));
+}
+
+/* Hélice del biplano girando (gira en su propio centro). */
+.airplane-prop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: prop-spin 0.14s linear infinite;
+}
+@keyframes prop-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .airplane-prop { animation: none; }
+}
+
+[data-scene="2"] .scene-text-block {
+  position: relative;
+  z-index: 4;
+  margin-top: 18vh;
+}
+
+/* ── Escena 3: Dibújame un cordero ─────────────────────────────── */
+[data-scene="3"] {
+  background: linear-gradient(
+    to bottom,
+    var(--color-crepusculo) 0%,
+    color-mix(in srgb, var(--color-crepusculo) 82%, var(--color-noche) 18%) 100%
+  );
+}
+
+.scene3-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  gap: var(--space-5);
+}
+
+.s3-principito {
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 10px 34px rgba(7, 18, 23, 0.8));
+  animation: ethereal-float 6s ease-in-out infinite;
+}
+
+.principito-2d {
+  width: clamp(120px, 28vw, 220px);
+  height: auto;
+}
+
+/* ── Escena 4: La rosa ─────────────────────────────────────────── */
+[data-scene="4"] {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-crepusculo) 82%, var(--color-noche) 18%) 0%,
+    color-mix(in srgb, var(--color-crepusculo) 68%, var(--color-terracota) 32%) 100%
+  );
+}
+
+.scene4-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  gap: var(--space-5);
+}
+
+.s4-rosa {
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 6px 24px rgba(208, 101, 74, 0.38));
+  animation: ethereal-float 7s ease-in-out infinite reverse;
+}
+
+.rosa-svg {
+  width: clamp(120px, 26vw, 200px);
+  height: auto;
+  transform-origin: center bottom;
+}
+
+/* ── Escena 5: Zorro ───────────────────────────────────────────── */
+[data-scene="5"] {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-crepusculo) 68%, var(--color-terracota) 32%) 0%,
+    var(--color-campo) 100%
+  );
+}
+
+/* ── Diorama del trigal (escenas 5 y 6): atmósfera + capas + figuras ──── */
+.scene-trigal {
+  position: relative;
+  isolation: isolate; /* los blend-modes screen se quedan dentro de la escena */
+}
+
+/* Cielo de atardecer: sol bajo cálido + rayos de luz */
+.trigal-cielo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(120% 78% at 50% 103%,
+    color-mix(in srgb, var(--color-trigo) 42%, transparent) 0%,
+    color-mix(in srgb, var(--color-arena) 28%, transparent) 26%,
+    transparent 60%);
+}
+.trigal-cielo--prev {
+  background: radial-gradient(120% 80% at 50% 105%,
+    color-mix(in srgb, var(--color-trigo-palido) 28%, transparent) 0%,
+    transparent 55%);
+}
+.trigal-sol {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  width: clamp(170px, 36vw, 380px);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    var(--color-trigo-vivo) 0%,
+    color-mix(in srgb, var(--color-trigo) 70%, transparent) 26%,
+    transparent 66%);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  will-change: opacity, transform;
+}
+.trigal-sol--prev { opacity: 0.28; filter: saturate(0.7); }
+.trigal-rayos {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 200%;
+  height: 140%;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background: repeating-conic-gradient(from 270deg at 50% 100%,
+    transparent 0deg 4deg,
+    color-mix(in srgb, var(--color-trigo) 55%, transparent) 5deg 7deg,
+    transparent 8deg 13deg);
+  -webkit-mask-image: radial-gradient(80% 90% at 50% 100%, #000 0%, transparent 72%);
+          mask-image: radial-gradient(80% 90% at 50% 100%, #000 0%, transparent 72%);
+  animation: rayos-drift 26s ease-in-out infinite alternate;
+}
+@keyframes rayos-drift {
+  from { transform: translateX(-50%) rotate(-2.5deg); }
+  to   { transform: translateX(-50%) rotate(2.5deg); }
+}
+
+/* Motas de polen flotando en el aire */
+.trigal-motas {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mota {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    var(--color-crema) 0%,
+    color-mix(in srgb, var(--color-trigo) 60%, transparent) 55%,
+    transparent 75%);
+  filter: blur(0.4px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+/* Capas de trigo (parallax). Cubren el ancho y se anclan abajo. */
+.trigo-capa {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  will-change: transform;
+}
+.trigo-capa--lejana  { height: 30%; z-index: 1; opacity: 0.62; filter: blur(2px) saturate(0.85); }
+.trigo-capa--media   { height: 42%; z-index: 3; }
+.trigo-capa--cercana { height: 54%; z-index: 5; }
+.trigo-capa--frente  { height: 72%; z-index: 6; opacity: 0.9;  filter: blur(3px); }
+
+/* Banda de luz viajera: la "ola dorada" literal que barre el campo */
+.trigal-ola {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 34%;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent 0%,
+    color-mix(in srgb, var(--color-trigo-vivo) 78%, transparent) 50%,
+    transparent 100%);
+  mix-blend-mode: screen;
+  filter: blur(9px);
+  will-change: transform, opacity;
+}
+
+/* Las figuras llenan su contenedor manteniendo proporción */
+.fox-svg,
+.principito-sentado {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Texto narrativo de la escena 5 */
+.s5-textblock {
+  position: absolute;
+  top: clamp(var(--space-5), 12vh, var(--space-7));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  width: min(40rem, 88vw);
+  text-align: center;
+}
+
+/* Zorro asomado (escena 5): a un lado, asomando del trigo sin tapar el texto */
+.s5-fox {
+  position: absolute;
+  right: 6%;
+  bottom: 9%;
+  width: clamp(140px, 27vw, 230px);
+  z-index: 4;
+  filter: drop-shadow(0 10px 22px rgba(7, 18, 23, 0.55));
+  animation: ethereal-float 8s ease-in-out infinite;
+}
+
+/* ── Escena 6: Trigal (SIGNATURE — la ola dorada) ──────────────── */
+[data-scene="6"] {
+  background: linear-gradient(
+    to bottom,
+    var(--color-campo) 0%,
+    var(--color-noche) 64%
+  );
+  overflow: hidden;
+}
+
+/* Resplandor cálido tras el trigo: nace en el horizonte y crece con el
+   scroll (su opacidad la maneja onUpdate, sin animación nueva). */
+.s6-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 150%;
+  height: 78%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 60% 100% at 50% 100%,
+      rgba(244, 199, 90, 0.55) 0%,
+      rgba(231, 178, 76, 0.28) 34%,
+      transparent 72%);
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+
+/* Figuras de la escena 6: principito (izq) + zorro (der) sobre el horizonte.
+   Van entre la capa media (detrás, z3) y la cercana/frente (delante, z5/6),
+   que ocluyen patas y cola — así quedan SENTADOS dentro del trigo. */
+.s6-figuras {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.s6-fox {
+  position: absolute;
+  right: 7%;
+  bottom: 22%;
+  width: clamp(180px, 33vw, 300px);
+  filter: drop-shadow(0 14px 22px rgba(7, 18, 23, 0.5));
+}
+.s6-principito {
+  position: absolute;
+  left: 8%;
+  bottom: 24%;
+  width: clamp(120px, 23vw, 210px);
+  filter: drop-shadow(0 12px 20px rgba(7, 18, 23, 0.5));
+  will-change: opacity, transform;
+}
+
+.s6-fragments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 58%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+  padding: var(--space-4);
+}
+
+/* Fragmentos: pensamientos que flotan sobre el campo (sin caja de
+   cristal pesada). El halo oscuro mantiene la legibilidad sobre el oro. */
+.scene-frag {
+  position: absolute;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.25rem, 3.2vw, 1.85rem);
+  color: var(--color-crema);
+  text-align: center;
+  max-width: min(34rem, 88vw);
+  line-height: 1.45;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  text-shadow:
+    0 0 40px rgba(7, 18, 23, 0.95),
+    0 2px 24px rgba(7, 18, 23, 0.92),
+    0 1px 4px rgba(7, 18, 23, 0.95);
+  will-change: opacity, transform;
+}
+
+/* El tercer fragmento — el corazón del cuento — encendido en oro */
+.scene-frag[data-frag="3"] {
+  color: var(--color-trigo-vivo);
+  text-shadow:
+    0 0 32px rgba(244, 199, 90, 0.45),
+    0 2px 22px rgba(7, 18, 23, 0.9);
+}
+
+/* Movimiento reducido: sin scrub que revele los fragmentos uno a uno,
+   se apilan en columna legible en vez de superponerse (antes los tres
+   quedaban encimados como un borrón). */
+.s6-fragments--static {
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4);
+  overflow-y: auto;
+}
+.s6-fragments--static .scene-frag {
+  position: relative;
+}
+
+/* ── Escena 7: Frase clave ─────────────────────────────────────── */
+[data-scene="7"] {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(40, 80, 90, 0.28) 0%, transparent 70%),
+    var(--color-noche);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene7-inner {
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  max-width: min(40rem, 92vw);
+  margin: 0 auto;
+}
+
+.quote-main {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.4rem, 8vw, 5.2rem);
+  color: var(--color-crema);
+  margin: 0 0 var(--space-4);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-shadow:
+    0 0 64px rgba(244, 208, 106, 0.5),
+    0 0 22px rgba(244, 208, 106, 0.28),
+    0 6px 16px rgba(0, 0, 0, 0.8);
+}
+
+/* Separador entre la cita y su eco: una hairline dorada con un
+   destello ✦ al centro. Da respiro y jerarquía (antes caían pegadas). */
+.quote-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-4) auto var(--space-3);
+  opacity: 0; /* GSAP revela junto al eco */
+}
+
+.quote-sep::before,
+.quote-sep::after {
+  content: "";
+  height: 1px;
+  width: clamp(2rem, 12vw, 5rem);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-trigo) 70%, transparent)
+  );
+}
+
+.quote-sep::after {
+  transform: scaleX(-1);
+}
+
+.quote-sep__star {
+  color: var(--color-oro);
+  font-size: 0.9rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(244, 208, 106, 0.55));
+}
+
+.quote-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  color: var(--color-trigo);
+  opacity: 0; /* GSAP revela */
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Escena 8: Cierre ──────────────────────────────────────────── */
+[data-scene="8"] {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(244, 208, 106, 0.12) 0%, transparent 58%),
+    radial-gradient(ellipse 85% 55% at 50% 30%, rgba(40, 80, 90, 0.26) 0%, transparent 72%),
+    var(--color-noche);
+}
+
+.scene8-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+  padding: var(--space-7) var(--space-4) var(--space-6);
+  gap: var(--space-5);
+  text-align: center;
+}
+
+.s8-principito {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 14px 42px rgba(7, 18, 23, 0.9));
+  animation: ethereal-float 9s ease-in-out infinite;
+}
+
+.s8-figure {
+  width: clamp(120px, 26vw, 200px);
+  height: auto;
+}
+
+.s8-text-block {
+  position: relative;
+  z-index: 2;
+  max-width: min(34rem, 90vw);
+}
+
+.birthday-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 4.5vw, 2.5rem);
+  color: var(--color-crema);
+  margin: 0 0 var(--space-4);
+  letter-spacing: -0.015em;
+  line-height: 1.18;
+  text-shadow: 0 0 28px rgba(244, 208, 106, 0.5);
+}
+
+/* La dedicatoria: mensaje personal, en la voz cálida del libro (serif) */
+.dedicatoria {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+  line-height: 1.85;
+  color: var(--color-crema-tenue);
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 0 var(--space-1);
+}
+
+/* Estado vacío: marca con claridad que falta el mensaje real, sin
+   romper la atmósfera. Borde punteado tenue + cursiva apagada =
+   "escribe aquí", reconocible de un vistazo. Reemplazar quita la clase. */
+.dedicatoria--placeholder {
+  font-style: italic;
+  color: color-mix(in srgb, var(--color-crema-tenue) 62%, transparent);
+}
+
+/* ── La carta: papel real con sello, no un <p> suelto ──────────── */
+.letter {
+  position: relative;
+  z-index: 2;
+  width: min(34rem, 92vw);
+  margin: var(--space-4) auto 0;
+  perspective: 1200px;
+}
+.letter__paper {
+  position: relative;
+  text-align: left;
+  padding: clamp(var(--space-4), 6vw, var(--space-6)) clamp(var(--space-4), 5vw, var(--space-5));
+  border-radius: 10px;
+  color: #3a2f24;
+  background:
+    linear-gradient(180deg, rgba(120, 80, 30, 0.05), rgba(120, 80, 30, 0.10)),
+    linear-gradient(135deg, #FCF6E8 0%, #F6EACF 55%, #EFDDBC 100%);
+  box-shadow:
+    0 40px 80px -30px rgba(0, 0, 0, 0.8),
+    0 10px 28px -14px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 60px rgba(180, 140, 80, 0.12);
+}
+/* Pliegue central tenue del papel */
+.letter__paper::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(120, 90, 50, 0.18) 20%, rgba(120, 90, 50, 0.18) 80%, transparent);
+  pointer-events: none;
+}
+.letter__kicker {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #9a6b2f;
+  margin: 0 0 var(--space-2);
+}
+.letter__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 4.4vw, 2.3rem);
+  line-height: 1.16;
+  color: #5a3a1c;
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.01em;
+}
+.letter__body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.02rem, 2.3vw, 1.16rem);
+  line-height: 1.9;
+  color: #4a3a2a;
+  margin: 0;
+  max-width: none;
+}
+.letter__body::first-letter {
+  font-size: 3.1em;
+  line-height: 0.78;
+  float: left;
+  padding: 0.06em 0.1em 0 0;
+  font-style: italic;
+  color: #b06a2e;
+}
+.letter__sign {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  color: #6a4a28;
+  text-align: right;
+  margin: var(--space-4) 0 0;
+  padding-right: clamp(2.6rem, 10vw, 4rem); /* despeja el sello de lacre */
+}
+/* Sello de lacre con destello */
+.letter__seal {
+  position: absolute;
+  right: clamp(-0.4rem, 2vw, 0.6rem);
+  bottom: clamp(-1rem, -2vw, -1.4rem);
+  width: clamp(54px, 12vw, 74px);
+  height: clamp(54px, 12vw, 74px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffe9c2;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  background:
+    radial-gradient(circle at 35% 30%, #C9573C 0%, #9C2F20 60%, #771f16 100%);
+  box-shadow:
+    0 10px 24px -8px rgba(120, 20, 10, 0.7),
+    inset 0 2px 6px rgba(255, 220, 180, 0.35),
+    inset 0 -6px 12px rgba(60, 10, 5, 0.5);
+  text-shadow: 0 1px 2px rgba(80, 15, 8, 0.7);
+}
+.dedicatoria--placeholder.letter__body {
+  color: color-mix(in srgb, #4a3a2a 55%, transparent);
+  font-style: italic;
+}
+
+/* ── Móvil: respiraciones más ajustadas ────────────────────────── */
+@media (max-width: 480px) {
+  .scene-text-block {
+    padding: var(--space-3) var(--space-4);
+  }
+  .scene3-inner,
+  .scene4-inner {
+    padding-top: var(--space-5);
+    gap: var(--space-4);
+  }
+  /* Trigal en móvil: figuras a los bordes y algo más compactas */
+  .s5-fox { width: clamp(120px, 40vw, 190px); bottom: 7%; }
+  .s6-fox { right: 1%; bottom: 20%; width: clamp(140px, 46vw, 230px); }
+  .s6-principito { left: 2%; bottom: 22%; width: clamp(94px, 31vw, 150px); }
+  .confirm-panel {
+    min-width: 0;
+    width: min(20rem, calc(100vw - 2 * var(--space-4)));
+    padding: var(--space-4);
+  }
+  .solar-hint {
+    max-width: calc(100vw - 2 * var(--space-4));
+  }
+  .solar-hint__text {
+    white-space: normal;
+  }
+}
