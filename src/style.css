@@ -880,10 +880,13 @@ body::after {
   pointer-events: none;
   will-change: transform;
 }
-.trigo-capa--lejana  { height: 30%; z-index: 1; opacity: 0.62; filter: blur(2px) saturate(0.85); }
-.trigo-capa--media   { height: 42%; z-index: 3; }
-.trigo-capa--cercana { height: 54%; z-index: 5; }
-.trigo-capa--frente  { height: 72%; z-index: 6; opacity: 0.9;  filter: blur(3px); }
+.trigo-capa--lejana  { height: 24%; z-index: 1; opacity: 0.5;  filter: blur(2.5px) saturate(0.8); }
+.trigo-capa--media   { height: 40%; z-index: 3; }
+.trigo-capa--cercana { height: 50%; z-index: 4; }
+/* Antes height:72% + blur:3px → manchas oscuras flotando a media pantalla.
+   Ahora es una franja baja y poco difusa que solo enmarca el borde inferior,
+   POR DETRÁS de las figuras (z6 < figuras z7) para no taparlas. */
+.trigo-capa--frente  { height: 30%; z-index: 6; opacity: 0.8;  filter: blur(1.5px); }
 
 /* Banda de luz viajera: la "ola dorada" literal que barre el campo */
 .trigal-ola {
@@ -892,7 +895,7 @@ body::after {
   left: 0;
   height: 100%;
   width: 34%;
-  z-index: 7;
+  z-index: 5;
   pointer-events: none;
   opacity: 0;
   background: linear-gradient(90deg, transparent 0%,
@@ -922,14 +925,15 @@ body::after {
   text-align: center;
 }
 
-/* Zorro asomado (escena 5): a un lado, asomando del trigo sin tapar el texto */
+/* Zorro asomado (escena 5): emerge del trigo, por DELANTE del campo (z7) para
+   que no quede medio escondido tras la capa cercana como antes (z4). */
 .s5-fox {
   position: absolute;
-  right: 6%;
-  bottom: 9%;
-  width: clamp(140px, 27vw, 230px);
-  z-index: 4;
-  filter: drop-shadow(0 10px 22px rgba(7, 18, 23, 0.55));
+  right: 9%;
+  bottom: 12%;
+  width: clamp(165px, 31vw, 270px);
+  z-index: 7;
+  filter: drop-shadow(0 12px 22px rgba(7, 18, 23, 0.5));
   animation: ethereal-float 8s ease-in-out infinite;
 }
 
@@ -967,26 +971,30 @@ body::after {
 /* Figuras de la escena 6: principito (izq) + zorro (der) sobre el horizonte.
    El principito asoma entre la capa media (z3) y la cercana (z5). El zorro,
    en cambio, va POR DELANTE del trigo (z7) para verse de cuerpo entero. */
+/* Las dos figuras van POR DELANTE de todo el trigo (z7). Antes el principito
+   heredaba z4 de este contenedor y quedaba sepultado tras las capas cercana (z4)
+   y frente (z6); por eso "casi no se veía". */
 .s6-figuras {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 7;
   pointer-events: none;
 }
-/* Zorro de cuerpo entero, sentado en la base del campo, sin que el trigo lo tape */
+/* Zorro y principito sentados sobre una MISMA línea de horizonte (bottom ~9-11%),
+   mirándose de frente: principito a la izquierda, zorro a la derecha. */
 .s6-fox {
   position: absolute;
-  right: 5%;
-  bottom: 5%;
-  width: clamp(150px, 28vw, 250px);
+  right: 9%;
+  bottom: 9%;
+  width: clamp(155px, 27vw, 240px);
   z-index: 7;
-  filter: drop-shadow(0 16px 26px rgba(7, 18, 23, 0.55));
+  filter: drop-shadow(0 16px 26px rgba(7, 18, 23, 0.5));
 }
 .s6-principito {
   position: absolute;
-  left: 8%;
-  bottom: 24%;
-  width: clamp(120px, 23vw, 210px);
+  left: 9%;
+  bottom: 11%;
+  width: clamp(120px, 22vw, 205px);
   filter: drop-shadow(0 12px 20px rgba(7, 18, 23, 0.5));
   will-change: opacity, transform;
 }
@@ -1305,10 +1313,10 @@ body::after {
     padding-top: var(--space-5);
     gap: var(--space-4);
   }
-  /* Trigal en móvil: figuras a los bordes y algo más compactas */
-  .s5-fox { width: clamp(120px, 40vw, 190px); bottom: 7%; }
-  .s6-fox { right: 1%; bottom: 4%; width: clamp(140px, 44vw, 220px); }
-  .s6-principito { left: 2%; bottom: 22%; width: clamp(94px, 31vw, 150px); }
+  /* Trigal en móvil: figuras algo más compactas, mismo horizonte común */
+  .s5-fox { right: 5%; bottom: 11%; width: clamp(140px, 44vw, 210px); }
+  .s6-fox { right: 4%; bottom: 9%; width: clamp(140px, 43vw, 205px); }
+  .s6-principito { left: 4%; bottom: 10%; width: clamp(100px, 33vw, 155px); }
   .confirm-panel {
     min-width: 0;
     width: min(20rem, calc(100vw - 2 * var(--space-4)));

@@ -13,6 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const rm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Rampa suave 0→1 entre a y b (con clamp). Base de los cross-fades continuos
+// guiados por el progreso del scroll (evita cortes duros "entrecortados").
+const ramp = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+
 // ── SVG helpers ───────────────────────────────────────────────
 
 // Destello de 4 puntas (rombo de lados cóncavos) — eco de los ✦ del Acto 2.
@@ -513,7 +517,7 @@ function scene4HTML() {
 
 function scene5HTML() {
   return `<section class="scene scene-trigal scene-trigal--prev" data-scene="5"
-      style="min-height:130vh;position:relative;overflow:hidden">
+      style="min-height:105vh;position:relative;overflow:hidden">
     <!-- Atmósfera: cielo de anochecer + sol bajo frío + rayos -->
     <div class="trigal-cielo trigal-cielo--prev" aria-hidden="true">
       <div class="trigal-sol trigal-sol--prev"></div>
@@ -564,6 +568,8 @@ function scene6HTML() {
     <!-- Banda de luz viajera: la "ola dorada" literal que barre el campo -->
     <div class="trigal-ola" aria-hidden="true"></div>
     <div class="s6-fragments">
+    <br>
+    <br>
       <p class="scene-frag" data-frag="1" style="opacity:0;transform:translateY(12px)">
         El zorro le explicó que, hasta entonces, el trigo no significaba nada para él.</p>
       <p class="scene-frag" data-frag="2" style="opacity:0;transform:translateY(12px)">
@@ -572,6 +578,7 @@ function scene6HTML() {
         «Ahora el trigo dorado me hará pensar en ti. Y amaré el sonido del viento entre las espigas.»</p>
     </div>
   </section>`;
+
 }
 
 function scene7HTML() {
@@ -611,10 +618,13 @@ function scene8HTML() {
 function poblarTrigal(scene, { densidad = 1, color = '#B2A878' } = {}) {
   const m = densidad;
   const cfg = {
-    lejana:  { cantidad: Math.round(22 * m), baseHeightFrac: 0.5,  color, rotJitter: 4 },
-    media:   { cantidad: Math.round(30 * m), baseHeightFrac: 0.72, color, rotJitter: 6 },
-    cercana: { cantidad: Math.round(18 * m), baseHeightFrac: 0.95, color, rotJitter: 7 },
-    frente:  { cantidad: Math.max(4, Math.round(6 * m)), baseHeightFrac: 1.3, color, rotJitter: 11 },
+    // La capa "frente" pasó de baseHeightFrac 1.3 (espigas gigantes que, al
+    // difuminarse, se leían como manchas oscuras flotando a media pantalla) a
+    // una franja baja y suave que solo enmarca el borde inferior.
+    lejana:  { cantidad: Math.round(20 * m), baseHeightFrac: 0.46, color, rotJitter: 4 },
+    media:   { cantidad: Math.round(32 * m), baseHeightFrac: 0.70, color, rotJitter: 6 },
+    cercana: { cantidad: Math.round(22 * m), baseHeightFrac: 0.92, color, rotJitter: 7 },
+    frente:  { cantidad: Math.max(5, Math.round(8 * m)), baseHeightFrac: 0.72, color, rotJitter: 9 },
   };
   const byLayer = {};
   for (const key of Object.keys(cfg)) {
@@ -947,7 +957,6 @@ function initScene6(container) {
   vientoTrigal(byLayer);
   vidaZorro(s);
   if (principito) gsap.set(principito, { opacity: 0, y: 26 });
-  let princeShown = false;
 
   const W = s.clientWidth || window.innerWidth;
 
@@ -969,17 +978,16 @@ function initScene6(container) {
       onUpdate: (self) => {
         const p = self.progress;
 
-        // Fragment 1: 5-40% of scroll
-        const showF1 = p >= 0.05 && p < 0.42;
-        gsap.set(frag1, { opacity: showF1 ? 1 : 0, y: showF1 ? 0 : 12 });
-
-        // Fragment 2: 42-78% of scroll
-        const showF2 = p >= 0.42 && p < 0.78;
-        gsap.set(frag2, { opacity: showF2 ? 1 : 0, y: showF2 ? 0 : 12 });
-
-        // Fragment 3: 78%+ of scroll
-        const showF3 = p >= 0.78;
-        gsap.set(frag3, { opacity: showF3 ? 1 : 0, y: showF3 ? 0 : 12 });
+        // Fragmentos: cross-fade CONTINUO guiado por el progreso. Antes eran
+        // cortes duros booleanos (opacity 0/1 de golpe) → la narración "saltaba"
+        // entrecortada. Ahora cada frase entra y sale con una rampa suave y los
+        // relevos se solapan un poco, sin parpadeos ni huecos en negro.
+        const o1 = ramp(p, 0.05, 0.12) * (1 - ramp(p, 0.34, 0.42));
+        const o2 = ramp(p, 0.40, 0.48) * (1 - ramp(p, 0.70, 0.78));
+        const o3 = ramp(p, 0.76, 0.85);
+        gsap.set(frag1, { opacity: o1, y: (1 - o1) * 10 });
+        gsap.set(frag2, { opacity: o2, y: (1 - o2) * 10 });
+        gsap.set(frag3, { opacity: o3, y: (1 - o3) * 10 });
 
         // Resplandor + sol + rayos CRECEN con la ola (vía progress). Nace al 35%.
         const g = Math.min(1, Math.max(0, (p - 0.35) / 0.6));
@@ -997,13 +1005,11 @@ function initScene6(container) {
         // Parallax sutil de capas durante el pin (más cercano = más recorrido).
         capas.forEach((el, i) => { if (el) gsap.set(el, { yPercent: -(i * 2.4) * p }); });
 
-        // Entrada del principito en el beat del fragmento 2 ("domesticar").
-        if (p >= 0.4 && !princeShown) {
-          princeShown = true;
-          gsap.to(principito, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' });
-        } else if (p < 0.36 && princeShown) {
-          princeShown = false;
-          gsap.to(principito, { opacity: 0, y: 26, duration: 0.5 });
+        // Entrada del principito: rampa suave en el beat de "domesticar"
+        // (antes aparecía/desaparecía de golpe con un flag booleano).
+        if (principito) {
+          const pr = ramp(p, 0.34, 0.5);
+          gsap.set(principito, { opacity: pr, y: (1 - pr) * 26 });
         }
 
         // Audio: fire each fragment narration once per forward pass
