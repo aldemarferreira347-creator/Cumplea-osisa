@@ -235,8 +235,87 @@ function foxPeekSVG() {
   return foxHeadSVG('fp', 'fox-peek');
 }
 
+// Zorro SENTADO de cuerpo entero (escena 6), mismo estilo ilustrado plano y la
+// misma cara amable que foxHeadSVG, pero con ancas, patas, pecho y cola. Pensado
+// para verse COMPLETO sobre el trigo (no tapado). Grupos idle: .fox-tail (cola),
+// .fox-breath (respira), .fox-ear-l/.fox-ear-r (tic), .fox-eyes (parpadeo).
+function foxSittingSVG(p, clase = '') {
+  return `<svg class="fox-svg ${clase}" viewBox="0 0 220 340" aria-hidden="true">
+    <defs>
+      <linearGradient id="${p}Fur" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F09A4A"/><stop offset="1" stop-color="#D9722F"/>
+      </linearGradient>
+      <linearGradient id="${p}Ear" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ED9344"/><stop offset="1" stop-color="#C75F2A"/>
+      </linearGradient>
+      <linearGradient id="${p}Body" x1="0" y1="0" x2="0.2" y2="1">
+        <stop offset="0" stop-color="#E58A3C"/><stop offset="1" stop-color="#BC5E27"/>
+      </linearGradient>
+      <linearGradient id="${p}Tail" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#E88E3E"/><stop offset="1" stop-color="#B0531F"/>
+      </linearGradient>
+      <linearGradient id="${p}Cream" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FCF5E6"/><stop offset="1" stop-color="#EBDABA"/>
+      </linearGradient>
+    </defs>
+
+    <!-- COLA frondosa al costado (se mece) -->
+    <g class="fox-tail">
+      <path d="M148 170 C192 176 214 222 202 266 C193 300 162 314 150 305
+               C160 286 162 258 154 232 C148 212 144 190 148 170 Z" fill="url(#${p}Tail)"/>
+      <path d="M150 302 C147 292 152 282 163 281 C174 280 181 291 177 301 C172 311 156 311 150 302 Z" fill="url(#${p}Cream)"/>
+    </g>
+
+    <g class="fox-breath">
+      <!-- ANCAS / cuerpo sentado -->
+      <path d="M110 150 C80 152 60 188 60 236 C60 284 82 312 110 312
+               C140 312 162 284 162 236 C162 188 142 152 110 150 Z" fill="url(#${p}Body)"/>
+      <!-- patas delanteras + zarpas -->
+      <path d="M94 246 C90 276 90 298 94 312 L110 312 C108 298 108 276 109 248 Z" fill="url(#${p}Body)"/>
+      <path d="M123 248 C123 276 123 298 126 312 L142 312 C144 298 144 276 138 246 Z" fill="url(#${p}Body)"/>
+      <ellipse cx="101" cy="311" rx="12" ry="5.5" fill="#B85E2A"/>
+      <ellipse cx="135" cy="311" rx="12" ry="5.5" fill="#B85E2A"/>
+      <!-- pecho / vientre claro -->
+      <path d="M110 162 C88 176 80 214 86 256 C90 288 110 302 110 302
+               C110 302 130 288 134 256 C140 214 132 176 110 162 Z" fill="url(#${p}Cream)"/>
+
+      <!-- CABEZA -->
+      <g class="fox-ear-l">
+        <path d="M76 78 L66 14 L114 60 Z" fill="url(#${p}Ear)"/>
+        <path d="M80 72 L74 32 L106 58 Z" fill="#7A2E18"/>
+        <path d="M82 67 L78 43 L100 56 Z" fill="url(#${p}Cream)" opacity=".62"/>
+      </g>
+      <g class="fox-ear-r">
+        <path d="M144 78 L154 14 L106 60 Z" fill="url(#${p}Ear)"/>
+        <path d="M140 72 L146 32 L114 58 Z" fill="#7A2E18"/>
+        <path d="M138 67 L142 43 L120 56 Z" fill="url(#${p}Cream)" opacity=".62"/>
+      </g>
+      <!-- cara: base clara (mejillas + hocico) -->
+      <path d="M110 72 C80 72 60 88 58 114 C56 136 68 160 88 176
+               C97 182 110 186 110 186 C110 186 123 182 132 176
+               C152 160 164 136 162 114 C160 88 140 72 110 72 Z" fill="url(#${p}Cream)"/>
+      <!-- máscara naranja: frente + caballete -->
+      <path d="M110 62 C84 62 64 78 64 104 C64 117 73 123 86 121
+               C95 120 100 128 104 139 C106 145 108 149 110 153
+               C112 149 114 145 116 139 C120 128 125 120 134 121
+               C147 123 156 117 156 104 C156 78 136 62 110 62 Z" fill="url(#${p}Fur)"/>
+      <!-- ojos pequeños y serenos -->
+      <g class="fox-eyes">
+        <path d="M76 116 C80 110 90 110 94 117 C90 122 80 122 76 116 Z" fill="#241410"/>
+        <path d="M144 116 C140 110 130 110 126 117 C130 122 140 122 144 116 Z" fill="#241410"/>
+        <circle cx="88" cy="114.4" r="1.3" fill="#FBE8C0" opacity=".85"/>
+        <circle cx="132" cy="114.4" r="1.3" fill="#FBE8C0" opacity=".85"/>
+      </g>
+      <!-- nariz -->
+      <path d="M110 144 C102 144 96 150 100 156 C104 161 110 163 110 163
+               C110 163 116 161 120 156 C124 150 118 144 110 144 Z" fill="#2A1A12"/>
+      <ellipse cx="106.5" cy="149" rx="1.6" ry="1.1" fill="#6E5847" opacity=".6"/>
+    </g>
+  </svg>`;
+}
+
 function foxFullSVG() {
-  return foxHeadSVG('ff', 'fox-full');
+  return foxSittingSVG('ff', 'fox-full');
 }
 
 function principitoSentadoSVG(clases = '') {
@@ -473,14 +552,15 @@ function scene6HTML() {
     <!-- Capas de trigo (parallax + ola dorada). Se llenan en initScene6. -->
     <div class="trigo-capa trigo-capa--lejana" data-capa="lejana"></div>
     <div class="trigo-capa trigo-capa--media" data-capa="media"></div>
-    <!-- Figuras: principito (izq) + zorro (der), sobre el horizonte -->
+    <!-- Principito (izq): asoma entre la capa media y la cercana -->
     <div class="s6-figuras">
       <div class="s6-principito">${principitoSentadoSVG()}</div>
-      <div class="s6-fox">${foxFullSVG()}</div>
     </div>
-    <!-- Capas delanteras: ocluyen las patas e integran las figuras en el campo -->
+    <!-- Capas delanteras del trigo -->
     <div class="trigo-capa trigo-capa--cercana" data-capa="cercana"></div>
     <div class="trigo-capa trigo-capa--frente" data-capa="frente"></div>
+    <!-- Zorro de cuerpo entero, POR DELANTE del trigo (no queda tapado) -->
+    <div class="s6-fox">${foxFullSVG()}</div>
     <!-- Banda de luz viajera: la "ola dorada" literal que barre el campo -->
     <div class="trigal-ola" aria-hidden="true"></div>
     <div class="s6-fragments">

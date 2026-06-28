@@ -965,20 +965,22 @@ body::after {
 }
 
 /* Figuras de la escena 6: principito (izq) + zorro (der) sobre el horizonte.
-   Van entre la capa media (detrás, z3) y la cercana/frente (delante, z5/6),
-   que ocluyen patas y cola — así quedan SENTADOS dentro del trigo. */
+   El principito asoma entre la capa media (z3) y la cercana (z5). El zorro,
+   en cambio, va POR DELANTE del trigo (z7) para verse de cuerpo entero. */
 .s6-figuras {
   position: absolute;
   inset: 0;
   z-index: 4;
   pointer-events: none;
 }
+/* Zorro de cuerpo entero, sentado en la base del campo, sin que el trigo lo tape */
 .s6-fox {
   position: absolute;
-  right: 7%;
-  bottom: 22%;
-  width: clamp(180px, 33vw, 300px);
-  filter: drop-shadow(0 14px 22px rgba(7, 18, 23, 0.5));
+  right: 5%;
+  bottom: 5%;
+  width: clamp(150px, 28vw, 250px);
+  z-index: 7;
+  filter: drop-shadow(0 16px 26px rgba(7, 18, 23, 0.55));
 }
 .s6-principito {
   position: absolute;
@@ -1305,7 +1307,7 @@ body::after {
   }
   /* Trigal en móvil: figuras a los bordes y algo más compactas */
   .s5-fox { width: clamp(120px, 40vw, 190px); bottom: 7%; }
-  .s6-fox { right: 1%; bottom: 20%; width: clamp(140px, 46vw, 230px); }
+  .s6-fox { right: 1%; bottom: 4%; width: clamp(140px, 44vw, 220px); }
   .s6-principito { left: 2%; bottom: 22%; width: clamp(94px, 31vw, 150px); }
   .confirm-panel {
     min-width: 0;
