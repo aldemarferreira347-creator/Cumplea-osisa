@@ -624,6 +624,7 @@ body::after {
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -631,7 +632,16 @@ body::after {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  /* Scrim difuminado detrás del texto para garantizar legibilidad
+     sin importar qué estrellas o destellos queden detrás */
+  background: radial-gradient(
+    ellipse 85% 80% at 50% 50%,
+    rgba(7, 18, 23, 0.55) 0%,
+    rgba(7, 18, 23, 0.28) 55%,
+    transparent 100%
+  );
+  border-radius: 12px;
 }
 
 .s1-title {
@@ -646,7 +656,8 @@ body::after {
   text-shadow:
     0 0 50px rgba(244, 208, 106, 0.42),
     0 0 16px rgba(244, 208, 106, 0.2),
-    0 6px 16px rgba(0, 0, 0, 0.65);
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 6px 20px rgba(0, 0, 0, 0.85);
 }
 
 .s1-sub {
@@ -656,8 +667,9 @@ body::after {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--color-trigo);
-  opacity: 0.85;
+  opacity: 0.92;
   margin: 0;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 0, 0, 0.6);
 }
 
 .scroll-hint {
@@ -986,15 +998,18 @@ body::after {
   position: absolute;
   right: 9%;
   bottom: 9%;
-  width: clamp(155px, 27vw, 240px);
+  /* Tope por vh: el zorro es alto (220×340); en pantallas bajas a tamaño
+     completo subía hasta el texto. min() lo encoge solo cuando hace falta. */
+  width: min(clamp(155px, 27vw, 240px), 30vh);
   z-index: 7;
   filter: drop-shadow(0 16px 26px rgba(7, 18, 23, 0.5));
 }
 .s6-principito {
   position: absolute;
-  left: 9%;
-  bottom: 11%;
-  width: clamp(120px, 22vw, 205px);
+  left: 8%;
+  bottom: 9%;
+  /* Más grande (rediseño 2): a la par del zorro. Tope por vh para pantallas bajas. */
+  width: min(clamp(158px, 27vw, 256px), 35vh);
   filter: drop-shadow(0 12px 20px rgba(7, 18, 23, 0.5));
   will-change: opacity, transform;
 }
@@ -1012,47 +1027,139 @@ body::after {
   padding: var(--space-4);
 }
 
-/* Fragmentos: pensamientos que flotan sobre el campo (sin caja de
-   cristal pesada). El halo oscuro mantiene la legibilidad sobre el oro. */
+/* Fragmentos: cada pensamiento va en su CARD — panel petróleo translúcido con
+   borde trigo tenue. La caja separa el texto del campo (antes el oro se metía
+   en el trigo y se perdía). Una card visible a la vez en la versión animada;
+   tres apiladas en reduced-motion. */
 .scene-frag {
   position: absolute;
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 300;
-  font-size: clamp(1.25rem, 3.2vw, 1.85rem);
+  font-size: clamp(1.18rem, 2.9vw, 1.68rem);
   color: var(--color-crema);
   text-align: center;
-  max-width: min(34rem, 88vw);
-  line-height: 1.45;
+  /* Ancho FIJO (no max-width) → las 3 cards quedan del mismo ancho y alineadas,
+     no escalonadas según el largo del texto. text-wrap:balance reparte las
+     líneas parejas. */
+  width: min(33rem, 88vw);
+  line-height: 1.55;
+  letter-spacing: 0.006em;
+  text-wrap: balance;
   margin: 0;
-  padding: var(--space-3) var(--space-4);
-  text-shadow:
-    0 0 40px rgba(7, 18, 23, 0.95),
-    0 2px 24px rgba(7, 18, 23, 0.92),
-    0 1px 4px rgba(7, 18, 23, 0.95);
+  padding: clamp(var(--space-3), 3vw, var(--space-5)) clamp(var(--space-4), 3.6vw, var(--space-6));
+  border-radius: 18px;
+  background: linear-gradient(158deg,
+    rgba(11, 26, 32, 0.84) 0%,
+    rgba(7, 18, 23, 0.8) 100%);
+  border: 1px solid color-mix(in srgb, var(--color-trigo) 24%, transparent);
+  box-shadow:
+    0 16px 38px rgba(7, 18, 23, 0.55),
+    inset 0 1px 0 rgba(251, 243, 224, 0.06);
+  -webkit-backdrop-filter: blur(3px);
+          backdrop-filter: blur(3px);
+  text-shadow: 0 1px 10px rgba(7, 18, 23, 0.6);
   will-change: opacity, transform;
 }
 
-/* El tercer fragmento — el corazón del cuento — encendido en oro */
+/* El tercer fragmento — el corazón del cuento — card con halo de oro */
 .scene-frag[data-frag="3"] {
   color: var(--color-trigo-vivo);
-  text-shadow:
-    0 0 32px rgba(244, 199, 90, 0.45),
-    0 2px 22px rgba(7, 18, 23, 0.9);
+  border-color: color-mix(in srgb, var(--color-trigo-vivo) 42%, transparent);
+  box-shadow:
+    0 16px 38px rgba(7, 18, 23, 0.55),
+    0 0 30px rgba(244, 199, 90, 0.18),
+    inset 0 1px 0 rgba(251, 243, 224, 0.07);
 }
 
-/* Movimiento reducido: sin scrub que revele los fragmentos uno a uno,
-   se apilan en columna legible en vez de superponerse (antes los tres
-   quedaban encimados como un borrón). */
+/* Movimiento reducido: sin scrub que revele los fragmentos uno a uno, se apilan
+   en columna. Cada uno es su propia CARD (heredada de .scene-frag) → ya se
+   separan entre sí y del campo; no hace falta velo ni separador ✦. Padding más
+   compacto que en la versión animada para que las 3 cards quepan sin desbordar. */
 .s6-fragments--static {
+  bottom: 34%;            /* texto en el 66% superior; figuras (reducidas) abajo */
   flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-5) var(--space-4);
-  overflow-y: auto;
+  justify-content: center;
+  gap: clamp(0.7rem, 2.4vh, 1.4rem);
+  padding: var(--space-4);
 }
 .s6-fragments--static .scene-frag {
   position: relative;
+  font-size: clamp(1rem, 2.2vw, 1.42rem);
+  line-height: 1.4;
+  padding: clamp(var(--space-2), 1.8vh, var(--space-4)) clamp(var(--space-4), 3.6vw, var(--space-5));
 }
+/* En reduced-motion los 3 fragmentos se muestran a la vez: las figuras se
+   encogen y bajan a las esquinas para que el texto no las pise (en la versión
+   animada cada frase aparece sola, así que las figuras van a tamaño completo). */
+/* Tope también por ALTO de viewport (min con vh): el zorro es alto (220×340),
+   así que en pantallas anchas-pero-bajas hay que encogerlo más o pisaría el
+   texto. El min() toma el menor de ancho-relativo y alto-relativo. */
+.scene6-static .s6-fox {
+  width: min(clamp(92px, 14vw, 132px), 18vh);
+  right: 4%;
+  bottom: 3%;
+}
+.scene6-static .s6-principito {
+  width: min(clamp(100px, 16vw, 156px), 23vh);
+  left: 4%;
+  bottom: 4%;
+}
+
+/* ── Escena 6 en modo PINTADO (híbrido) ─────────────────────────────
+   La lámina 'trigal.png' trae fondo + trigo + figuras (SIN texto). Se muestra
+   enmarcada (contain, para no recortar nada en móvil) sobre el degradado de la
+   escena, con leve respiración. El trigo/figuras SVG y el cielo SVG se ocultan;
+   las cajas de texto HTML van ENCIMA (nítidas, responsivas, con su revelado). */
+.scene-trigal--art .s6-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 66% at 50% 58%, rgba(33, 65, 58, 0.55) 0%, transparent 76%),
+    linear-gradient(to bottom, var(--color-campo) 0%, var(--color-noche) 78%);
+}
+/* Relleno de márgenes (al hacer 'contain'): versión BORROSA de la misma lámina,
+   para que los lados no queden en negro plano en pantallas anchas. */
+.scene-trigal--art .s6-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/trigal.png") center / cover no-repeat;
+  filter: blur(34px) brightness(0.46) saturate(1.05);
+  transform: scale(1.18);
+}
+.scene-trigal--art .s6-art img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow:
+    0 26px 64px rgba(7, 18, 23, 0.62),
+    0 0 0 1px color-mix(in srgb, var(--color-trigo) 16%, transparent);
+  animation: s6-art-breathe 20s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes s6-art-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.025); }
+}
+/* Lo que ya está pintado en la lámina se oculta */
+.scene-trigal--art .trigo-capa,
+.scene-trigal--art .s6-figuras,
+.scene-trigal--art .s6-fox,
+.scene-trigal--art .trigal-cielo {
+  display: none;
+}
+/* El texto va en cajas HTML ENCIMA de la lámina (la imagen ya no trae texto):
+   nítido y responsivo en cualquier pantalla. Se reusan las reglas normales de
+   .s6-fragments / .scene-frag, no hace falta nada extra aquí. */
 
 /* ── Escena 7: Frase clave ─────────────────────────────────────── */
 [data-scene="7"] {

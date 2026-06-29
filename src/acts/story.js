@@ -323,47 +323,106 @@ function foxFullSVG() {
 }
 
 function principitoSentadoSVG(clases = '') {
-  // Principito sentado mirando a la derecha (hacia el zorro), para la escena 6.
-  // Reusa el lenguaje del principitoSVG: abrigo petróleo, pelo dorado, bufanda.
-  return `<svg class="principito-2d principito-sentado ${clases}" viewBox="0 0 150 180" aria-hidden="true">
+  // El Principito SENTADO en el trigal, mirando a la derecha (hacia el zorro).
+  // Rediseño 2 (desde cero, más grande y robusto a tamaño chico): cabeza
+  // grande de cuento, pelo dorado en mechones audaces, abrigo petróleo con
+  // cuello/botones/cinturón, bufanda terracota al viento, brazo apoyado hacia
+  // el zorro y luz cálida de borde del lado del sol (derecha). viewBox 200×250.
+  return `<svg class="principito-2d principito-sentado ${clases}" viewBox="0 0 200 250" aria-hidden="true">
     <defs>
-      <linearGradient id="psCoat" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#2C5660"/><stop offset="1" stop-color="#0B1A20"/>
+      <linearGradient id="psCoat" x1="0" y1="0" x2="0.3" y2="1">
+        <stop offset="0" stop-color="#3C7B86"/><stop offset="0.55" stop-color="#22515B"/><stop offset="1" stop-color="#123139"/>
       </linearGradient>
-      <radialGradient id="psFace" cx="50%" cy="48%" r="55%">
-        <stop offset="60%" stop-color="#FAD6A5"/><stop offset="100%" stop-color="#E8A87C"/>
+      <radialGradient id="psFace" cx="44%" cy="40%" r="64%">
+        <stop offset="55%" stop-color="#FBDDB4"/><stop offset="100%" stop-color="#E6A179"/>
       </radialGradient>
-      <linearGradient id="psHair" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#F4D068"/><stop offset="0.5" stop-color="#F2A65A"/><stop offset="1" stop-color="#D9A05B"/>
+      <linearGradient id="psHair" x1="0.1" y1="0" x2="0.9" y2="1">
+        <stop offset="0" stop-color="#FADF84"/><stop offset="0.55" stop-color="#EEB958"/><stop offset="1" stop-color="#D5963F"/>
       </linearGradient>
-      <linearGradient id="psScarf" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#E7B24C"/><stop offset="1" stop-color="#C8923A"/>
+      <linearGradient id="psScarf" x1="0" y1="0" x2="1" y2="0.7">
+        <stop offset="0" stop-color="#EC9159"/><stop offset="1" stop-color="#BE4530"/>
+      </linearGradient>
+      <linearGradient id="psBoot" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#714C33"/><stop offset="1" stop-color="#392316"/>
       </linearGradient>
     </defs>
-    <!-- piernas sentadas (pantalón verde-pino del campo) -->
-    <path d="M58 150 C70 142 98 142 118 150 C122 158 120 167 110 169 C92 165 74 165 58 169 C52 162 54 154 58 150 Z" fill="#3C6B4E"/>
-    <ellipse cx="113" cy="161" rx="10" ry="6" fill="#21413A"/>
-    <!-- abrigo (torso sentado) -->
-    <path d="M58 96 C49 110 45 132 52 151 C70 143 98 143 118 151 C122 132 117 110 104 98 C90 89 70 88 58 96 Z" fill="url(#psCoat)"/>
-    <path d="M58 96 C52 112 50 132 55 149 C59 132 61 112 67 100 C63 98 60 97 58 96 Z" fill="#16323A" opacity=".5"/>
-    <!-- brazo que se apoya hacia el zorro -->
-    <path d="M100 104 C113 106 121 117 120 129 C115 132 109 130 105 124 C102 117 99 112 95 110 Z" fill="url(#psCoat)"/>
-    <circle cx="119" cy="129" r="5" fill="url(#psFace)"/>
-    <!-- bufanda al viento -->
-    <ellipse cx="80" cy="92" rx="15" ry="6" fill="url(#psScarf)"/>
-    <path d="M66 92 C57 100 55 113 60 123 C66 113 69 100 73 94 Z" fill="url(#psScarf)"/>
-    <!-- cabeza (mira a la derecha) -->
-    <circle cx="82" cy="64" r="20" fill="url(#psFace)"/>
-    <!-- pelo dorado -->
-    <path d="M62 62 C64 40 80 34 92 42 C103 36 111 49 108 63 C100 53 92 51 86 55 C78 49 68 52 62 62 Z" fill="url(#psHair)"/>
-    <path d="M64 60 C68 46 80 42 90 48 C84 46 76 48 70 56 Z" fill="#F4D068" opacity=".55"/>
-    <!-- cara: mirada hacia el zorro + sonrisa -->
-    <circle cx="86" cy="64" r="2.4" fill="#0A1128"/>
-    <circle cx="95" cy="64" r="2.4" fill="#0A1128"/>
-    <circle cx="86.8" cy="63" r="0.9" fill="#FFF8E7"/>
-    <circle cx="95.8" cy="63" r="0.9" fill="#FFF8E7"/>
-    <path d="M85 72 C89 76 95 76 99 72" fill="none" stroke="#C8794F" stroke-width="1.4" stroke-linecap="round"/>
-    <ellipse cx="79" cy="71" rx="3" ry="2" fill="#E8A87C" opacity=".5"/>
+
+    <!-- ░ BUFANDA: cola larga al viento (izq), tras el cuerpo ░ -->
+    <path d="M104 110 C74 100 44 106 14 96 C30 110 16 124 2 122 C26 132 56 127 80 120 C94 116 102 114 110 116 Z" fill="url(#psScarf)" opacity="0.96"/>
+    <path d="M100 110 C72 102 46 106 22 99" fill="none" stroke="#F5B387" stroke-width="2" opacity="0.55" stroke-linecap="round"/>
+
+    <!-- ░ PIERNA/BOTA TRASERA asoma (izq) ░ -->
+    <path d="M84 214 C74 214 66 221 67 229 C68 237 80 238 90 233 L94 224 Z" fill="url(#psBoot)" opacity="0.92"/>
+
+    <!-- ░ ABRIGO: torso + faldón sentado (petróleo) ░ -->
+    <path d="M82 100 C62 114 52 154 51 198 C50 222 66 236 100 236 C134 236 150 222 149 198 C148 154 138 114 118 100 C107 92 93 92 82 100 Z" fill="url(#psCoat)"/>
+    <path d="M82 100 C64 116 55 156 54 198 C53 218 62 230 80 234 C71 208 70 160 73 126 C75 110 78 104 85 101 Z" fill="#11303A" opacity="0.5"/>
+    <path d="M118 101 C135 116 144 156 145 198 C146 217 138 229 121 234 C130 208 131 160 128 127 C126 111 122 104 117 101 Z" fill="#47848F" opacity="0.42"/>
+
+    <!-- ░ PIERNA/BOTA DELANTERA (doblada, apunta al zorro) ░ -->
+    <path d="M104 216 C126 211 150 217 168 228 C173 234 166 243 156 241 C137 234 116 230 103 230 C96 228 97 219 104 216 Z" fill="#2F5B4D"/>
+    <path d="M154 228 C170 226 182 232 182 239 C181 245 168 246 159 243 L148 238 Z" fill="url(#psBoot)"/>
+    <path d="M154 229 C164 228 174 231 179 235" fill="none" stroke="#9A663A" stroke-width="2.2" opacity="0.55" stroke-linecap="round"/>
+
+    <!-- ░ CUELLO ALTO del abrigo ░ -->
+    <path d="M86 98 C94 89 106 89 114 98 L110 110 C104 103 96 103 90 110 Z" fill="#40757F"/>
+
+    <!-- ░ BOTONADURA dorada ░ -->
+    <line x1="100" y1="120" x2="100" y2="188" stroke="#10303A" stroke-width="1.7" opacity="0.5"/>
+    <circle cx="100" cy="128" r="3" fill="#F4D06A" stroke="#B07F2C" stroke-width="0.7"/>
+    <circle cx="100" cy="144" r="3" fill="#F4D06A" stroke="#B07F2C" stroke-width="0.7"/>
+    <circle cx="100" cy="160" r="3" fill="#F4D06A" stroke="#B07F2C" stroke-width="0.7"/>
+    <circle cx="100" cy="176" r="3" fill="#F4D06A" stroke="#B07F2C" stroke-width="0.7"/>
+
+    <!-- ░ CINTURÓN + hebilla ░ -->
+    <path d="M58 184 C82 192 122 192 144 184 L144 196 C122 204 82 204 58 196 Z" fill="#10303A"/>
+    <rect x="92" y="185" width="14" height="9" rx="2" fill="#E7B24C"/>
+
+    <!-- ░ BRAZO apoyado hacia el zorro (der) ░ -->
+    <path d="M118 106 C136 114 150 142 154 174 C155 187 148 197 140 197 C135 178 130 148 116 126 C112 116 112 108 118 106 Z" fill="url(#psCoat)"/>
+    <path d="M135 188 C143 189 150 191 150 196 C149 201 142 201 137 198 Z" fill="#40757F"/>
+    <ellipse cx="146" cy="195" rx="7.5" ry="6.2" fill="url(#psFace)"/>
+
+    <!-- ░ BUFANDA: nudo + cola corta al frente ░ -->
+    <path d="M92 100 C97 112 109 112 114 100 C113 111 111 118 103 121 C96 118 92 110 92 100 Z" fill="url(#psScarf)"/>
+    <path d="M101 119 C95 132 97 146 105 154 C99 140 101 127 107 121 Z" fill="url(#psScarf)"/>
+    <path d="M94 102 C99 108 107 108 112 102" fill="none" stroke="#F5B387" stroke-width="1.6" opacity="0.5" stroke-linecap="round"/>
+
+    <!-- ░ CUELLO (piel) ░ -->
+    <path d="M91 84 L91 100 C91 107 113 107 113 100 L113 84 Z" fill="url(#psFace)"/>
+    <path d="M91 92 C97 97 113 97 113 92 L113 100 C106 106 96 105 91 100 Z" fill="#D6896A" opacity="0.4"/>
+
+    <!-- ░ OREJA (atrás, izq) ░ -->
+    <ellipse cx="69" cy="62" rx="6" ry="8.4" fill="url(#psFace)"/>
+    <ellipse cx="70" cy="62" rx="2.6" ry="4.6" fill="#D6896A" opacity="0.55"/>
+
+    <!-- ░ CABEZA grande (óvalo) ░ -->
+    <path d="M66 56 C66 34 81 20 100 20 C120 20 134 37 134 58 C134 80 119 95 100 95 C80 95 66 78 66 56 Z" fill="url(#psFace)"/>
+
+    <!-- ░ PELO dorado: melena en mechones puntiagudos ░ -->
+    <path d="M63 60 C59 36 77 16 101 15 C99 6 112 2 116 11 C124 4 136 9 133 21
+             C143 24 146 43 140 62 C134 50 124 45 115 47 C118 35 107 31 102 39
+             C105 26 92 24 89 35 C84 25 72 30 75 43 C68 35 64 44 66 56 Z" fill="url(#psHair)"/>
+    <path d="M68 50 C72 56 72 64 67 68 C63 63 63 54 68 50 Z" fill="url(#psHair)"/>
+    <path d="M132 49 C137 55 137 64 131 68 C127 62 127 53 132 49 Z" fill="url(#psHair)"/>
+    <path d="M80 26 C90 20 108 21 119 28" fill="none" stroke="#FDEBAB" stroke-width="2.4" opacity="0.5" stroke-linecap="round"/>
+    <path d="M76 40 C82 36 90 36 95 39" fill="none" stroke="#FDEBAB" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/>
+
+    <!-- ░ CARA: ojos hacia el zorro, cejas, naricita, sonrisa, mejillas ░ -->
+    <ellipse cx="100" cy="60" rx="2.8" ry="3.6" fill="#1A2230"/>
+    <ellipse cx="113" cy="60" rx="2.8" ry="3.6" fill="#1A2230"/>
+    <circle cx="101" cy="58.6" r="1" fill="#FFF8E7"/>
+    <circle cx="114" cy="58.6" r="1" fill="#FFF8E7"/>
+    <path d="M95 53 Q100 50 105 53" fill="none" stroke="#C79A55" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M109 53 Q114 50 118 53" fill="none" stroke="#C79A55" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M107 62 C109 64 109 67 107 69" fill="none" stroke="#D6896A" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M99 73 C105 78 114 77 119 72" fill="none" stroke="#C26B45" stroke-width="1.8" stroke-linecap="round"/>
+    <ellipse cx="96" cy="69" rx="4" ry="2.6" fill="#E8896A" opacity="0.45"/>
+    <ellipse cx="120" cy="68" rx="3.4" ry="2.2" fill="#E8896A" opacity="0.4"/>
+
+    <!-- ░ LUZ CÁLIDA DE BORDE (sol a la derecha) ░ -->
+    <path d="M133 42 C139 50 139 70 129 84" fill="none" stroke="#F6D27A" stroke-width="2.2" opacity="0.5" stroke-linecap="round"/>
+    <path d="M152 130 C155 146 155 164 150 178" fill="none" stroke="#6CA0AC" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
   </svg>`;
 }
 
@@ -542,8 +601,13 @@ function scene5HTML() {
 }
 
 function scene6HTML() {
-  return `<section class="scene scene-trigal" data-scene="6"
+  return `<section class="scene scene-trigal scene-trigal--art" data-scene="6"
       style="height:100vh;position:relative;overflow:hidden">
+    <!-- ESCENA PINTADA (híbrido): la lámina 'trigal.png' trae fondo + trigo +
+         principito + zorro (SIN texto). El trigo/figuras SVG y el cielo SVG se
+         OCULTAN por CSS (.scene-trigal--art); las cajas de texto HTML van ENCIMA
+         (nítidas y responsivas), más glow + motas + banda de luz + leve zoom. -->
+    <div class="s6-art"><img src="/trigal.png" alt="El principito y el zorro entre el trigo dorado" /></div>
     <!-- Atmósfera: cielo de atardecer + sol bajo + rayos de luz -->
     <div class="trigal-cielo" aria-hidden="true">
       <div class="trigal-sol"></div>
@@ -567,9 +631,9 @@ function scene6HTML() {
     <div class="s6-fox">${foxFullSVG()}</div>
     <!-- Banda de luz viajera: la "ola dorada" literal que barre el campo -->
     <div class="trigal-ola" aria-hidden="true"></div>
+    <!-- Texto: oculto a la vista (ya está en la lámina) pero disponible para
+         lectores de pantalla (sr-only vía CSS). -->
     <div class="s6-fragments">
-    <br>
-    <br>
       <p class="scene-frag" data-frag="1" style="opacity:0;transform:translateY(12px)">
         El zorro le explicó que, hasta entonces, el trigo no significaba nada para él.</p>
       <p class="scene-frag" data-frag="2" style="opacity:0;transform:translateY(12px)">
@@ -933,7 +997,14 @@ function initScene6(container) {
   const capas = ['lejana', 'media', 'cercana', 'frente'].map((k) => s.querySelector(`.trigo-capa--${k}`));
   const mobile = window.matchMedia('(max-width: 600px)').matches;
 
-  const byLayer = poblarTrigal(s, { densidad: mobile ? 0.55 : 1, color: '#B2A878' });
+  // Modo PINTADO (híbrido): el trigo y las figuras ya están en la lámina, así
+  // que no generamos los SVG de trigo ni los animamos (ahorra DOM/perf). Solo
+  // mantenemos las motas + el pin que dispara glow, banda de luz y narración.
+  const art = s.classList.contains('scene-trigal--art');
+
+  const byLayer = art
+    ? { lejana: [], media: [], cercana: [], frente: [] }
+    : poblarTrigal(s, { densidad: mobile ? 0.55 : 1, color: '#B2A878' });
   poblarMotas(s, mobile ? 12 : 26);
 
   // La "ola dorada" enciende las espigas de las capas media + cercana,
@@ -949,13 +1020,15 @@ function initScene6(container) {
     if (sol) gsap.set(sol, { opacity: 1 });
     if (rayos) gsap.set(rayos, { opacity: 0.4 });
     if (principito) gsap.set(principito, { opacity: 1, y: 0 });
+    // Marca la escena para que el CSS achique/baje las figuras a las esquinas
+    // y el texto apilado (3 fragmentos a la vez) tenga sitio sin solaparlas.
+    s.classList.add('scene6-static');
     s.querySelector('.s6-fragments').classList.add('s6-fragments--static');
     gsap.set(frags, { opacity: 1, y: 0 });
     return;
   }
 
-  vientoTrigal(byLayer);
-  vidaZorro(s);
+  if (!art) { vientoTrigal(byLayer); vidaZorro(s); }
   if (principito) gsap.set(principito, { opacity: 0, y: 26 });
 
   const W = s.clientWidth || window.innerWidth;
